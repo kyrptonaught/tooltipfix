@@ -1,0 +1,27 @@
+{
+  "schemaVersion": 1,
+  "id": "tooltipfix",
+  "version": "1.0.0-1.16",
+  "name": "ToolTip Fix",
+  "description": "Fixes ToolTips from runnning off the screen",
+  "authors": [
+    "kyrptonaught"
+  ],
+  "contact": {
+    "homepage": "https://github.com/kyrptonaught/tooltipfix",
+    "sources": "https://github.com/kyrptonaught/tooltipfix"
+  },
+  "license": "MIT",
+  "icon": "assets/tooltipfix/icon.png",
+  "environment": "*",
+  "mixins": [
+    {
+      "config": "tooltipfix.mixins.json",
+      "environment": "client"
+    }
+  ],
+  "depends": {
+    "fabricloader": ">=0.4.0",
+    "fabric": "*"
+  }
+}

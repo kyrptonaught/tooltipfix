@@ -1,0 +1,11 @@
+{
+  "required": true,
+  "package": "net.kyrptonaught.tooltipfix.mixin",
+  "compatibilityLevel": "JAVA_8",
+  "mixins": [
+    "FixToolTipMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}
