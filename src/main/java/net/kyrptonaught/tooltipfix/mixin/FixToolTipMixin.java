@@ -8,6 +8,7 @@ import net.minecraft.text.LiteralText;
 import net.minecraft.text.OrderedText;
 import net.minecraft.text.Style;
 import net.minecraft.text.Text;
+import net.minecraft.util.Formatting;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
@@ -41,17 +42,25 @@ public abstract class FixToolTipMixin {
     public List<Text> doFix(List<Text> text, int x) {
         text = new ArrayList<>(text);
         //text.add(new LiteralText("MOM MY DICK HURTS REALLY BAD").formatted(Formatting.DARK_GREEN, Formatting.UNDERLINE));
-        //text.add(new LiteralText("a a a a a a a a a a a a a a a a a a a "));
+       //text.add(new LiteralText("BEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE"));
         for (int i = 0; i < text.size(); i++) {
-            if (x + textRenderer.getWidth(text.get(i)) > width - 20) {
+            if (isTooWide(x, width, text.get(i).getString())) {
                 Style style = text.get(i).getStyle();
                 List<String> words = new ArrayList<>(Arrays.asList(text.get(i).getString().split(" ")));
 
                 String newLine = words.remove(0);
-                while (words.size() > 0)
-                    if (x + textRenderer.getWidth(newLine + " " + words.get(0)) <= width - 20)
-                        newLine += " " + words.remove(0);
-                    else break;
+                if (isTooWide(x, width, newLine)) {
+                    String oldLine = newLine;
+                    while (isTooWide(x, width, newLine + "-"))
+                        newLine = newLine.substring(0, newLine.length() - 1);
+                    words.add(0, "-" + oldLine.substring(newLine.length()));
+                    newLine = newLine + "-";
+
+                } else
+                    while (words.size() > 0)
+                        if (!isTooWide(x, width, newLine + " " + words.get(0)))
+                            newLine += " " + words.remove(0);
+                        else break;
 
                 text.set(i, new LiteralText(newLine).setStyle(style));
                 if (words.size() > 0)
@@ -59,5 +68,9 @@ public abstract class FixToolTipMixin {
             }
         }
         return text;
+    }
+
+    public boolean isTooWide(int x, int width, String line) {
+        return x + textRenderer.getWidth(line) > width - 20;
     }
 }
