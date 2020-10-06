@@ -4,6 +4,7 @@ import net.minecraft.client.font.TextRenderer;
 import net.minecraft.text.LiteralText;
 import net.minecraft.text.Style;
 import net.minecraft.text.Text;
+import net.minecraft.util.Formatting;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -12,7 +13,7 @@ import java.util.List;
 public class Helper {
     public static List<Text> doFix(List<Text> text, int x, int width, TextRenderer textRenderer) {
         text = new ArrayList<>(text);
-        for (int i = 0; i < text.size(); i++) {
+       for (int i = 0; i < text.size(); i++) {
             if (isTooWide(x, width, textRenderer, text.get(i).getString())) {
                 Style style = text.get(i).getStyle();
                 List<String> words = new ArrayList<>(Arrays.asList(text.get(i).getString().split(" ")));
@@ -36,6 +37,8 @@ public class Helper {
                     text.add(i + 1, new LiteralText(String.join(" ", words)).setStyle(style));
             }
         }
+
+
         return text;
     }
 
