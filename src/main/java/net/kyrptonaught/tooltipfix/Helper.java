@@ -13,16 +13,23 @@ import java.util.List;
 public class Helper {
     public static List<Text> doFix(List<Text> text, int x, int width, TextRenderer textRenderer) {
         text = new ArrayList<>(text);
-       for (int i = 0; i < text.size(); i++) {
+        //System.out.println(text.size() + " " + text.get(0).getString().length() +  " " + x + " " + width + " " + isTooWide(x, width, textRenderer, text.get(0).getString()));
+        if(text.size() == 1 && text.get(0).getString().length() >=12)
+            return text;
+        for (int i = 0; i < text.size(); i++) {
             if (isTooWide(x, width, textRenderer, text.get(i).getString())) {
                 Style style = text.get(i).getStyle();
                 List<String> words = new ArrayList<>(Arrays.asList(text.get(i).getString().split(" ")));
 
+                if (words.isEmpty()) return text;
+
                 String newLine = words.remove(0);
                 if (isTooWide(x, width, textRenderer, newLine)) {
                     String oldLine = newLine;
-                    while (isTooWide(x, width, textRenderer, newLine + "-"))
+
+                    while (isTooWide(x, width, textRenderer, newLine + "-")) {
                         newLine = newLine.substring(0, newLine.length() - 1);
+                    }
                     words.add(0, "-" + oldLine.substring(newLine.length()));
                     newLine = newLine + "-";
 
