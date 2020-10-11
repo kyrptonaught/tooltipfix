@@ -23,6 +23,7 @@ dependencies {
 	modImplementation ("io.github.prospector:modmenu:1.14.6+build.31"){
 		transitive(false)
 	}
+
 }
 
 processResources {

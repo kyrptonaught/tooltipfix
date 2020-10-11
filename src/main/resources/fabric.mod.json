@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "id": "tooltipfix",
-  "version": "1.0.1-1.16",
+  "version": "1.0.2-1.16",
   "name": "ToolTip Fix",
   "description": "Fixes ToolTips from runnning off the screen",
   "authors": [
