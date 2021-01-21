@@ -11,6 +11,7 @@ import net.minecraft.text.OrderedText;
 import net.minecraft.text.Text;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Overwrite;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -28,17 +29,23 @@ public abstract class FixToolTipMixin {
     @Shadow
     public abstract void renderOrderedTooltip(MatrixStack matrices, List<? extends OrderedText> lines, int x, int y);
 
-    @Inject(method = "renderTooltip(Lnet/minecraft/client/util/math/MatrixStack;Lnet/minecraft/text/Text;II)V", at = @At(value = "HEAD"), cancellable = true)
-    public void fix(MatrixStack matrices, Text text, int x, int y, CallbackInfo ci) {
+    /**
+     * @author Kyrptonaught
+     * @reason Fix
+     */
+    @Overwrite
+    public void renderTooltip(MatrixStack matrices, Text text, int x, int y) {
         Helper.set(x,width);
         this.renderOrderedTooltip(matrices, Lists.transform(Helper.doFix(Collections.singletonList(text), textRenderer), Text::asOrderedText), Helper.x, y);
-        ci.cancel();
     }
 
-    @Inject(method = "renderTooltip(Lnet/minecraft/client/util/math/MatrixStack;Ljava/util/List;II)V", at = @At("HEAD"), cancellable = true)
-    public void fix(MatrixStack matrices, List<Text> lines, int x, int y, CallbackInfo ci) {
+    /**
+     * @author Kyrptonaught
+     * @reason Fix
+     */
+    @Overwrite
+    public void renderTooltip(MatrixStack matrices, List<Text> lines, int x, int y) {
         Helper.set(x,width);
         this.renderOrderedTooltip(matrices, Lists.transform(Helper.doFix(lines, textRenderer), Text::asOrderedText), Helper.x, y);
-        ci.cancel();
     }
 }
