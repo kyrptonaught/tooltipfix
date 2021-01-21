@@ -185,7 +185,3 @@ Network Trash Folder
 Temporary Items
 .apdisk
 # End of https://www.gitignore.io/api/java,gradle,windows,intellij,forgegradle
-.idea/codeStyles/codeStyleConfig.xml
-.idea/codeStyles/Project.xml
-.idea/compiler.xml
-.idea/misc.xml
