@@ -25,7 +25,7 @@ public class Helper {
         List<Text> originalText = text;
         text = new ArrayList<>(text);
 
-        //System.out.println(text.size() + " " + text.get(0).getString().length() +  " " + x + " " + width + " " + isTooWide(x, width, textRenderer, text.get(0).getString()));
+        //System.out.println(text.size() + " " + text.get(0).getString().length() +  " " + x + " " + width + " " + isTooWide(textRenderer, text.get(0).getString()));
         if (text.size() == 0 || (text.size() == 1 && text.get(0).getString().length() <= 12))
             return text;
         for (int i = 0; i < text.size(); i++) {
