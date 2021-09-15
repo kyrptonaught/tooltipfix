@@ -5,7 +5,8 @@
   "name": "ToolTip Fix",
   "description": "Fixes ToolTips from runnning off the screen",
   "authors": [
-    "kyrptonaught"
+    "kyrptonaught",
+    "jptrzy"
   ],
   "contact": {
     "homepage": "https://www.curseforge.com/minecraft/mc-mods/tooltipfix",
