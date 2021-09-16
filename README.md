@@ -20,4 +20,5 @@ Vanilla:
   
 ## ToDo:
 * Add compatibility with rei
-* Create icon
+* Change icon to more representive
+* Change mod descrition
