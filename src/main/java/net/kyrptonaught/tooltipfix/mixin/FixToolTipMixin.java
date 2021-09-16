@@ -31,7 +31,6 @@ public abstract class FixToolTipMixin {
 
     @Inject(method = "renderTooltip(Lnet/minecraft/client/util/math/MatrixStack;Lnet/minecraft/text/Text;II)V", at = @At(value = "HEAD"), cancellable = true)
     public void fix(MatrixStack matrices, Text text, int x, int y, CallbackInfo ci) {
-        System.out.println("1");
         Helper.set(x,width);
         this.renderOrderedTooltip(matrices, Lists.transform(Helper.doFix(Collections.singletonList(text), textRenderer), Text::asOrderedText), Helper.x, y);
         ci.cancel();
@@ -39,7 +38,6 @@ public abstract class FixToolTipMixin {
 
     @Inject(method = "renderTooltip(Lnet/minecraft/client/util/math/MatrixStack;Ljava/util/List;II)V", at = @At("HEAD"), cancellable = true)
     public void fix(MatrixStack matrices, List<Text> lines, int x, int y, CallbackInfo ci) {
-        System.out.println("2");
         Helper.set(x,width);
         this.renderOrderedTooltip(matrices, Lists.transform(Helper.doFix(lines, textRenderer), Text::asOrderedText), Helper.x, y);
         ci.cancel();
@@ -47,7 +45,6 @@ public abstract class FixToolTipMixin {
 
     @Inject(method = "renderTooltip(Lnet/minecraft/client/util/math/MatrixStack;Ljava/util/List;Ljava/util/Optional;II)V", at = @At("HEAD"), cancellable = true)
     public void fix(MatrixStack matrices, List<Text> lines, Optional<TooltipData> data, int x, int y, CallbackInfo ci) {
-        System.out.println("3");
         Helper.set(x,width);
         this.renderOrderedTooltip(matrices, Lists.transform(Helper.doFix(lines, textRenderer), Text::asOrderedText), Helper.x, y);
         ci.cancel();
