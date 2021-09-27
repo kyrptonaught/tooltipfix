@@ -22,39 +22,34 @@ public class Helper {
     }
 
     public static List<Text> doFix(List<Text> text, TextRenderer textRenderer) {
-        List<Text> originalText = text;
         text = new ArrayList<>(text);
+        if (text.size() != 0 && (text.size() != 1 || text.get(0).getString().length() > 12)) {
+            for (int i = 0; i < text.size(); i++) {
+                if (isTooWide(textRenderer, text.get(i).getString())) {
+                    Style style = text.get(i).getStyle();
+                    List<String> words = new ArrayList<>(Arrays.asList(text.get(i).getString().split(" ")));
+                    if (words.isEmpty()) return text;
 
-        //System.out.println(text.size() + " " + text.get(0).getString().length() +  " " + x + " " + width + " " + isTooWide(textRenderer, text.get(0).getString()));
-        if (text.size() == 0 || (text.size() == 1 && text.get(0).getString().length() <= 12))
-            return text;
-        for (int i = 0; i < text.size(); i++) {
-            if (isTooWide(textRenderer, text.get(i).getString())) {
-                Style style = text.get(i).getStyle();
-                List<String> words = new ArrayList<>(Arrays.asList(text.get(i).getString().split(" ")));
-                if (words.isEmpty()) return text;
-
-                String newLine = words.remove(0);
-                if (isTooWide(textRenderer, newLine)) {
-                    if (!flipped && x > width / 2) {
-                        flipped = true;
-                        return doFix(originalText, textRenderer);
-                    } else {
+                    String newLine = words.remove(0);
+                    if (isTooWide(textRenderer, newLine)) {
+                        if (!flipped && x > width / 2) {
+                            flipped = true;
+                            return doFix(text, textRenderer);
+                        }
                         String oldLine = newLine;
                         while (isTooWide(textRenderer, newLine + "-")) {
                             newLine = newLine.substring(0, newLine.length() - 1);
                         }
                         words.add(0, "-" + oldLine.substring(newLine.length()));
                         newLine = newLine + "-";
-                    }
-                } else
-                    while (words.size() > 0)
-                        if (!isTooWide(textRenderer, newLine + " " + words.get(0)))
-                            newLine += " " + words.remove(0);
-                        else break;
-                text.set(i, new LiteralText(newLine).setStyle(style));
-                if (words.size() > 0)
-                    text.add(i + 1, new LiteralText(String.join(" ", words)).setStyle(style));
+                    } else
+                        while (words.size() > 0 && !isTooWide(textRenderer, newLine + " " + words.get(0))) {
+                            newLine = newLine + " " + words.remove(0);
+                        }
+                    text.set(i, new LiteralText(newLine).setStyle(style));
+                    if (words.size() > 0)
+                        text.add(i + 1, new LiteralText(String.join(" ", words)).setStyle(style));
+                }
             }
         }
         return text;
