@@ -1,7 +1,6 @@
 package net.kyrptonaught.tooltipfix;
 
 import net.minecraft.client.font.TextRenderer;
-import net.minecraft.text.LiteralText;
 import net.minecraft.text.Style;
 import net.minecraft.text.Text;
 
@@ -46,9 +45,9 @@ public class Helper {
                         while (words.size() > 0 && !isTooWide(textRenderer, newLine + " " + words.get(0))) {
                             newLine = newLine + " " + words.remove(0);
                         }
-                    text.set(i, new LiteralText(newLine).setStyle(style));
+                    text.set(i, Text.literal(newLine).setStyle(style));
                     if (words.size() > 0)
-                        text.add(i + 1, new LiteralText(String.join(" ", words)).setStyle(style));
+                        text.add(i + 1, Text.literal(String.join(" ", words)).setStyle(style));
                 }
             }
         }
