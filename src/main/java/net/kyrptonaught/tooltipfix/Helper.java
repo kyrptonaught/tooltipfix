@@ -22,6 +22,19 @@ public class Helper {
 
     public static List<Text> doFix(List<Text> text, TextRenderer textRenderer) {
         text = new ArrayList<>(text);
+
+        //split on \n
+        for (int i =0 ;i < text.size();i++) {
+            if (text.get(i).getString().contains("\\n")) {
+                Style style = text.get(i).getStyle();
+                String[] split = text.get(i).getString().split("\\\\n");
+                text.set(i, Text.literal(split[0]).setStyle(style));
+                for (int j = 1; j < split.length; j++) {
+                    text.add(i + j, Text.literal(split[j]).setStyle(style));
+                }
+            }
+        }
+
         if (text.size() != 0 && (text.size() != 1 || text.get(0).getString().length() > 12)) {
             for (int i = 0; i < text.size(); i++) {
                 if (isTooWide(textRenderer, text.get(i).getString())) {
