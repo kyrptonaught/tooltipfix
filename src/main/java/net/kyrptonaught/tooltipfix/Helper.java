@@ -1,86 +1,69 @@
 package net.kyrptonaught.tooltipfix;
 
+import net.kyrptonaught.tooltipfix.mixin.OrderedTextToolTipAccessor;
 import net.minecraft.client.font.TextRenderer;
-import net.minecraft.text.Style;
+import net.minecraft.client.gui.tooltip.OrderedTextTooltipComponent;
+import net.minecraft.client.gui.tooltip.TooltipComponent;
+import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 public class Helper {
-    public static int x, width;
-    private static int mouseX;
-    static boolean flipped;
 
-    public static void set(int x, int width) {
-        Helper.x = Math.max(0, x);
-        Helper.width = width - 20;
-        mouseX = Helper.x - 24;
-        flipped = false; //width - x <= 100; // auto flip if the biggest possible length is less than 100; is this needed?
+    public static void newFix(List<TooltipComponent> components, TextRenderer textRenderer, int x, int width) {
+/*
+        int forcedWidth = 0;
+        for(TooltipComponent component : components){
+            if(!(component instanceof OrderedTextTooltipComponent)){
+                int width2 = component.getWidth(textRenderer);
+                if(width2 > forcedWidth)
+                    forcedWidth = width2;
+            }
+        }
+*/
+        wrapNewLines(components);
+        wrapLongLines(components, textRenderer, width - 20 - x);
     }
 
-    public static List<Text> doFix(List<Text> text, TextRenderer textRenderer) {
-        text = new ArrayList<>(text);
 
-        //split on \n
-        for (int i =0 ;i < text.size();i++) {
-            if (text.get(i).getString().contains("\\n")) {
-                Style style = text.get(i).getStyle();
-                String[] split = text.get(i).getString().split("\\\\n");
-                text.set(i, Text.literal(split[0]).setStyle(style));
-                for (int j = 1; j < split.length; j++) {
-                    text.add(i + j, Text.literal(split[j]).setStyle(style));
+    public static void wrapLongLines(List<TooltipComponent> components, TextRenderer textRenderer, int maxSize) {
+        for (int i = 0; i < components.size(); i++) {
+            if (components.get(i) instanceof OrderedTextTooltipComponent orderedTextTooltipComponent) {
+                Text text = OrderedTextToTextVisitor.get(((OrderedTextToolTipAccessor) orderedTextTooltipComponent).getText());
+
+                List<TooltipComponent> wrapped = textRenderer.wrapLines(text, maxSize).stream().map(TooltipComponent::of).toList();
+                components.remove(i);
+                components.addAll(i, wrapped);
+            }
+        }
+    }
+
+    public static void wrapNewLines(List<TooltipComponent> components) {
+        for (int i = 0; i < components.size(); i++) {
+            if (components.get(i) instanceof OrderedTextTooltipComponent orderedTextTooltipComponent) {
+                Text text = OrderedTextToTextVisitor.get(((OrderedTextToolTipAccessor) orderedTextTooltipComponent).getText());
+
+                List<Text> children = text.getSiblings();
+                for (int j = 0; j < children.size() - 1; j++) {
+                    String code = children.get(j).getString() + children.get(j + 1).getString();
+                    if (code.equals("\\n")) {
+                        components.set(i, TooltipComponent.of(textWithChildren(children, 0, j).asOrderedText()));
+                        components.add(i + 1, TooltipComponent.of(textWithChildren(children, j + 2, children.size()).asOrderedText()));
+                        break;
+                    }
                 }
             }
         }
+    }
 
-        if (text.size() != 0 && (text.size() != 1 || text.get(0).getString().length() > 12)) {
-            for (int i = 0; i < text.size(); i++) {
-                if (isTooWide(textRenderer, text.get(i).getString())) {
-                    Style style = text.get(i).getStyle();
-                    List<String> words = new ArrayList<>(Arrays.asList(text.get(i).getString().split(" ")));
-                    if (words.isEmpty()) return text;
+    private static Text textWithChildren(List<Text> children, int from, int end) {
+        MutableText text = Text.literal("");
 
-                    String newLine = words.remove(0);
-                    if (isTooWide(textRenderer, newLine)) {
-                        if (!flipped && x > width / 2) {
-                            flipped = true;
-                            return doFix(text, textRenderer);
-                        }
-                        String oldLine = newLine;
-                        while (isTooWide(textRenderer, newLine + "-")) {
-                            newLine = newLine.substring(0, newLine.length() - 1);
-                        }
-                        words.add(0, "-" + oldLine.substring(newLine.length()));
-                        newLine = newLine + "-";
-                    } else
-                        while (words.size() > 0 && !isTooWide(textRenderer, newLine + " " + words.get(0))) {
-                            newLine = newLine + " " + words.remove(0);
-                        }
-                    text.set(i, Text.literal(newLine).setStyle(style));
-                    if (words.size() > 0)
-                        text.add(i + 1, Text.literal(String.join(" ", words)).setStyle(style));
-                }
-            }
-        }
+        for (int i = from; i < end; i++)
+            text.append(children.get(i));
+
         return text;
     }
 
-    private static boolean isTooWide(TextRenderer textRenderer, String line) {
-        if (flipped) {
-            if (mouseX - textRenderer.getWidth(line) > 0) {
-                attemptUpdateMaxWidth(line, textRenderer);
-                return false;
-            }
-            return true;
-        }
-        return x + textRenderer.getWidth(line) > width;
-    }
-
-    private static void attemptUpdateMaxWidth(String newLine, TextRenderer textRenderer) {
-        int lineWidth = textRenderer.getWidth(newLine);
-        if (lineWidth > mouseX - x) // new line longer than previous "max width"
-            x = mouseX - lineWidth;
-    }
 }

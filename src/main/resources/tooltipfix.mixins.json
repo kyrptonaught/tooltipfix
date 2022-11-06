@@ -2,8 +2,9 @@
   "required": true,
   "package": "net.kyrptonaught.tooltipfix.mixin",
   "compatibilityLevel": "JAVA_17",
-  "mixins": [
-    "FixToolTipMixin"
+  "client": [
+    "FixToolTipMixin",
+    "OrderedTextToolTipAccessor"
   ],
   "injectors": {
     "defaultRequire": 1
