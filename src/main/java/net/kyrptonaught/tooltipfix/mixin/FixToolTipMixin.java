@@ -12,6 +12,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.ModifyVariable;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Mixin(Screen.class)
@@ -21,7 +22,12 @@ public abstract class FixToolTipMixin {
     @Shadow
     public int width;
 
-    @Inject(method = "renderTooltipFromComponents", at = @At("HEAD"))
+    @ModifyVariable(method = "renderTooltipFromComponents", at = @At(value = "HEAD"), index = 2, argsOnly = true)
+    public List<TooltipComponent> makeListMutable(List<TooltipComponent> value) {
+        return new ArrayList<>(value);
+    }
+
+    @Inject(method = "renderTooltipFromComponents", at = @At(value = "INVOKE", target = "Ljava/util/List;size()I", ordinal = 0))
     public void fix(MatrixStack matrices, List<TooltipComponent> components, int x, int y, CallbackInfo ci) {
         Helper.newFix(components, textRenderer, x, width);
     }
