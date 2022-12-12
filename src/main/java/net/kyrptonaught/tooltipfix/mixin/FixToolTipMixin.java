@@ -4,6 +4,7 @@ import net.kyrptonaught.tooltipfix.Helper;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.tooltip.TooltipComponent;
+import net.minecraft.client.gui.tooltip.TooltipPositioner;
 import net.minecraft.client.util.math.MatrixStack;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -28,7 +29,7 @@ public abstract class FixToolTipMixin {
     }
 
     @Inject(method = "renderTooltipFromComponents", at = @At(value = "INVOKE", target = "Ljava/util/List;size()I", ordinal = 0))
-    public void fix(MatrixStack matrices, List<TooltipComponent> components, int x, int y, CallbackInfo ci) {
+    public void fix(MatrixStack matrices, List<TooltipComponent> components, int x, int y, TooltipPositioner positioner, CallbackInfo ci) {
         Helper.newFix(components, textRenderer, x, width);
     }
 
