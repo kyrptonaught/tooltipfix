@@ -59,6 +59,7 @@ public class Helper {
         for (int i = 0; i < components.size(); i++) {
             if (components.get(i) instanceof OrderedTextTooltipComponent orderedTextTooltipComponent) {
                 Text text = OrderedTextToTextVisitor.get(((OrderedTextToolTipAccessor) orderedTextTooltipComponent).getText());
+                if (text.getSiblings().isEmpty()) continue;
 
                 List<TooltipComponent> wrapped = textRenderer.wrapLines(text, maxSize).stream().map(TooltipComponent::of).toList();
                 components.remove(i);
