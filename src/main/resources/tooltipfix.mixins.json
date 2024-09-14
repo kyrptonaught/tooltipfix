@@ -1,7 +1,7 @@
 {
   "required": true,
   "package": "net.kyrptonaught.tooltipfix.mixin",
-  "compatibilityLevel": "JAVA_17",
+  "compatibilityLevel": "JAVA_21",
   "client": [
     "FixToolTipMixin",
     "OrderedTextToolTipAccessor"

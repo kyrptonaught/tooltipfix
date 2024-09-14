@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "id": "tooltipfix",
-  "version": "1.1.1-1.20",
+  "version": "1.1.1-1.20.6",
   "name": "ToolTip Fix",
   "description": "Fixes ToolTips from running off the screen",
   "authors": [
@@ -21,7 +21,7 @@
     }
   ],
   "depends": {
-    "fabricloader": ">=0.12.5",
+    "fabricloader": ">=0.15.11",
     "fabric": "*"
   }
 }
